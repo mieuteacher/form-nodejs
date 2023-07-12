@@ -50,7 +50,7 @@ http.createServer((request, response) => {
             if (request.method == "POST") {
                 const form = new Multiparty.Form();
 
-                form.parse(request, async (err, fields, files) => {
+                form.parse(request, (err, fields, files) => {
                     if (err) {
                     // Xử lý lỗi
                     console.error(err);
@@ -58,17 +58,18 @@ http.createServer((request, response) => {
                     response.end('Lỗi xử lý dữ liệu');
                     return;
                     }
-                    
+                    console.log("fields", fields)
+                    console.log("files", files)
                     let userInfor = {
                         userName: fields.userName[0],
                         passWord: fields.passWord[0],
                     }
 
-                    
-
                     let uploadedFile = files.userAvatar[0];
+                    
+                    let typeFile = uploadedFile.originalFilename.split('.')[uploadedFile.originalFilename.split('.').length - 1];
 
-                    let targetPath = path.join(__dirname, `images/${uploadedFile.originalFilename}`)
+                    let targetPath = path.join(__dirname, `images/${ Math.random() + Date.now() + "." + typeFile}`);
 
                     fs.copyFile(uploadedFile.path, targetPath, (err) => {
                         if (err) {
@@ -88,6 +89,7 @@ http.createServer((request, response) => {
             break
         case '/images':
             let imagePath = path.join(__dirname, `${urlObj.pathname}`);
+
             fs.readFile(imagePath, (err, data) => {
                 if (err) {
                 response.writeHead(404, { 'Content-Type': 'text/plain' });
