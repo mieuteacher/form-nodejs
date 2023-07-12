@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+</head>
+<body>
+    <form action="/formjs" method="post" enctype="multipart/form-data">
+        <input name="userName" type="text" placeholder="username">
+        <input name="passWord" type="password" placeholder="password">
+        <input onchange="test(event)" name="userAvatar" type="file">
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        function test(event) {
+            console.log("event", event.target.files[0])
+            console.log("event", typeof event.target.files[0])
+        }
+    </script>
+</body>
+</html>
