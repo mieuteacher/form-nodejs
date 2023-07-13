@@ -42,6 +42,33 @@ async function uploadFileToStorage(fileUploads, folderName) {
   return url;
 }
 
+async function uploadImgToStorage(name,fileUploads, folderName, typeFile) { 
+
+  // If the file is null, do nothing
+  if (!fileUploads) { 
+    return false;
+  }
+
+  if (!typeFile) {
+    return false;
+  }
+  // Convert the file to a format suitable for Firebase upload
+  let fileRef = ref(storage, `${folderName}/` + name);
+
+  const metadata = {
+    contentType: `image/${typeFile}`
+  };
+
+  // Upload the file to Firebase storage
+  let url = await uploadBytes(fileRef, fileUploads, metadata).then(async (res) => {
+    // When the upload is successful, retrieve the URL
+    return await getDownloadURL(res.ref)
+      .then((url) => url)
+      .catch((er) => false);
+  });
+
+  return url;
+}
 /* 
   Only parameter: folder name
   Returns: 
@@ -70,5 +97,6 @@ async function getFileInFolder(folderName) {
 
 module.exports = {
   uploadFileToStorage,
-  getFileInFolder
+  getFileInFolder,
+  uploadImgToStorage
 };
